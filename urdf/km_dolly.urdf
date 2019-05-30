@@ -18,7 +18,7 @@
     </visual>
   </link>
 
-  <link name="horizontal_laser_link">
+  <!--<link name="horizontal_laser_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -27,6 +27,7 @@
       <material name="red" />
     </visual>
   </link>
+  -->
 
   <link name="base_link">
     <visual>
@@ -44,12 +45,13 @@
     <origin xyz="0.10 0 0.062" />
   </joint>
 
+  <!--
   <joint name="horizontal_laser_link_joint" type="fixed">
     <parent link="base_link" />
     <child link="horizontal_laser_link" />
     <origin xyz="0 0 0.40" rpy="0 0 0"/>
   </joint>
-
+  -->
   <link name="right_wheel">
     <visual>
       <geometry>

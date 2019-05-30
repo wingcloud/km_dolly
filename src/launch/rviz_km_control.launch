@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="robot_description"
+      textfile="$(find km_dolly)/urdf/km_dolly.urdf" />
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find km_dolly)/rviz/km_control.rviz" />
+</launch>
