@@ -2,7 +2,8 @@ km_dolly - ROS package for KM-1 Dolly Kit
 =========================================
 Requirements
 -----------
-pykeigan_motor v2(Python 2 and Python 3 compatible ver.)
+- ROS Kinetic
+- pykeigan_motor v2(Python 2 and Python 3 compatible ver.)
 
 https://github.com/keigan-motor/pykeigan_motor/tree/dev
 
