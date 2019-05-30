@@ -1,0 +1,55 @@
+<launch>
+  <param name="robot_description"
+    textfile="$(find km_dolly)/urdf/km_dolly.urdf" />
+    <!--
+    <node pkg="rosbag" type="record" name="rosbag_record_cam"
+           args="record -a" />
+    <node
+       name="horizontal_laser"
+       pkg="rplidar_ros"
+       type="rplidarNode"
+       output="screen">
+       <param name="serial_port"      type="string" value="/dev/ttyUSB0"/>
+       <param name="serial_baudrate"  type="int"    value="115200"/>
+       <param name="frame_id"         type="string" value="horizontal_laser_link"/>
+       <param name="inverted"         type="bool"   value="false"/>
+       <param name="angle_compensate" type="bool"   value="true"/>
+    </node>
+    <node
+        pkg="tf"
+        type="static_transform_publisher"
+        name="laser_link_connect"
+        args="0 0 0 0 0 0 /horizontal_laser_link /scan 100"
+    />
+    <node
+        pkg="tf"
+        type="static_transform_publisher"
+        name="base_link_connect"
+        args="0 0 0.34 3.14 0 0 /base_link /horizontal_laser_link 100"
+    />
+    -->
+    <node
+        pkg="tf"
+        type="static_transform_publisher"
+        name="imu_link_connect"
+        args="0.12 0 0.062 0 0 0 /base_link /imu_link 100"
+    />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+<arg name="connect_mode" value="ble" />
+<arg name="right_w_addr" value="c3:29:da:d4:34:d2" />
+<arg name="left_w_addr" value="ee:f4:36:61:81:3f" />
+<arg name="joy_dev" value="/dev/input/js0" />
+
+<node pkg="km_dolly" name="km_dolly_wheels" type="km_wheels.py">
+  <param name="connect_mode" value="$(arg connect_mode)" />
+  <param name="right_w_addr" value="$(arg right_w_addr)" />
+  <param name="left_w_addr" value="$(arg left_w_addr)" />
+</node>
+<node pkg="km_dolly" name="km_dolly_joy" type="km_teleop_joy.py" />
+<node pkg="joy" name="joy" type="joy_node">
+  <param name="dev" value="$(arg joy_dev)"/>
+</node>
+<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node" output="screen" />
+</launch>
