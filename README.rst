@@ -16,3 +16,5 @@ How to use
   cd ~/catkin_ws/
   catkin_make
   roslaunch km_dolly km_control.launch connect_mode:=ble right_w_addr:=XX:XX:XX:XX:XX:XX left_w_addr:=XX:XX:XX:XX:XX:XX
+  (option)
+  roslaunch km_dolly rviz_km_control.launch
