@@ -51,5 +51,5 @@
 <node pkg="joy" name="joy" type="joy_node">
   <param name="dev" value="$(arg joy_dev)"/>
 </node>
-<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node" output="screen" />
+<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node" output="screen"/>
 </launch>

@@ -69,8 +69,8 @@ def MotionModel(x,u,dt):
     theta = x[2]
     v = u[0]
     omega = u[1]
-    loc_x = loc_x + np.cos(theta)*v*dt
-    loc_y = loc_y + np.sin(theta)*v*dt
+    loc_x = loc_x + np.cos(theta+np.pi/2)*v*dt
+    loc_y = loc_y + np.sin(theta+np.pi/2)*v*dt
     theta = theta + omega*dt
     theta = PItoPI(theta)
     x=np.array([loc_x,loc_y,theta])
@@ -125,7 +125,7 @@ class KM_Wheels:
         self.odo.child_frame_id='base_link'
         self.odocount = 0
         self.pub_odo = rospy.Publisher('/odom', Odometry,queue_size=10)
-        self.x = np.array([0.0,0.0,np.pi/2])
+        self.x = np.array([0.0,0.0,0.0])
         self.current_time = time.time()
         self.last_time = time.time()
 
@@ -149,10 +149,6 @@ class KM_Wheels:
         self.left_angle_trans.child_frame_id = "left_wheel"
         self.left_angle_trans.header.frame_id = "left_km1"
 
-        self.world_trans = TransformStamped()
-        self.world_trans.header.stamp = rospy.Time.now()
-        self.world_trans.header.frame_id = "world"
-        self.world_trans.child_frame_id = "odom"
         rospy.Subscriber('/cmd_vel',Twist,self.teleop_callback,queue_size=1)
 
 
@@ -244,14 +240,6 @@ class KM_Wheels:
             q = tf.transformations.quaternion_from_euler(right_position,0,0)
             self.right_angle_trans.transform.rotation = Quaternion(*q)
             self.tf_broadcaster.sendTransform(self.right_angle_trans)
-
-            self.world_trans.header.stamp = rospy.Time.now()
-            self.world_trans.transform.translation.x = - 2*self.odom_trans.transform.translation.x
-            self.world_trans.transform.translation.y = - 2*self.odom_trans.transform.translation.y
-            self.world_trans.transform.translation.z = - 2*self.odom_trans.transform.translation.z
-            q = tf.transformations.quaternion_from_euler(0, 0, -2*(self.x[2]-old_theta)+np.pi/2)
-            self.world_trans.transform.rotation = Quaternion(*q)
-            self.tf_broadcaster.sendTransform(self.world_trans)
 
             self.last_time = time.time()
         except:
