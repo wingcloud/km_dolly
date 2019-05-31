@@ -65,11 +65,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        horizontal_laser_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         imu_link:
           Alpha: 1
           Show Axes: false
@@ -105,7 +100,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: world
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -162,5 +157,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 784
-  Y: 141
+  X: 1134
+  Y: 89
