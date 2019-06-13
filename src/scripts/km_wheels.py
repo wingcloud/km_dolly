@@ -226,7 +226,7 @@ class KM_Wheels:
             self.tf_broadcaster.sendTransform(self.odom_trans)
 
             self.left_angle_trans.header.stamp = rospy.Time.now()
-            self.left_angle_trans.transform.translation.x = -0.03
+            self.left_angle_trans.transform.translation.x = 0
             self.left_angle_trans.transform.translation.y = 0
             self.left_angle_trans.transform.translation.z = 0
             q = tf.transformations.quaternion_from_euler(-left_position,0,0)
@@ -234,7 +234,7 @@ class KM_Wheels:
             self.tf_broadcaster.sendTransform(self.left_angle_trans)
 
             self.right_angle_trans.header.stamp = rospy.Time.now()
-            self.right_angle_trans.transform.translation.x = 0.03
+            self.right_angle_trans.transform.translation.x = 0
             self.right_angle_trans.transform.translation.y = 0
             self.right_angle_trans.transform.translation.z = 0
             q = tf.transformations.quaternion_from_euler(right_position,0,0)

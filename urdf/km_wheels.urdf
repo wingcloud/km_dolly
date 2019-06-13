@@ -1,0 +1,81 @@
+<robot name="km_dolly">
+  <material name="orange">
+    <color rgba="1.0 0.5 0.2 1" />
+  </material>
+  <material name="gray">
+    <color rgba="0.7 0.7 0.7 1" />
+  </material>
+  <material name="red">
+    <color rgba="0.4 0 0 1" />
+  </material>
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02" />
+      </geometry>
+      <material name="orange" />
+    </visual>
+  </link>
+
+  <link name="horizontal_laser_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.03" />
+      </geometry>
+      <material name="red" />
+    </visual>
+  </link>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://km_dolly/stl/rescaled_dolly.stl" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="gray" />
+    </visual>
+  </link>
+
+  <joint name="imu_link_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <origin xyz="0.12 0 0" />
+  </joint>
+
+  <joint name="horizontal_laser_link_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="horizontal_laser_link" />
+    <origin xyz="0 0.34 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="right_wheel">
+    <geometry>
+      <mesh filename="package://km_dolly/stl/Keigan_Dolly_Wheel_R.stl" />
+    </geometry>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <material name="gray" />
+    <!--<geometry>
+      <cylinder length="0.03" radius="0.0597" />
+    </geometry>-->
+  </link>
+  <link name="left_wheel">
+    <geometry>
+      <cylinder length="0.03" radius="0.0597" />
+    </geometry>
+  </link>
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="right_wheel" />
+    <origin xyz="0 0.0425 0.02215" rpy="1.57 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="left_wheel" />
+    <origin xyz="0 0.0425 0.02215" rpy="-1.57 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+</robot>
