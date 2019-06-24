@@ -42,7 +42,7 @@
 <arg name="left_w_addr" value="ee:f4:36:61:81:3f" />
 <arg name="joy_dev" value="/dev/input/js0" />
 
-<node pkg="km_dolly" name="km_dolly_wheels" type="km_wheels.py">
+<node pkg="km_dolly" name="km_dolly_wheels" type="km_wheels.py" output="screen">
   <param name="connect_mode" value="$(arg connect_mode)" />
   <param name="right_w_addr" value="$(arg right_w_addr)" />
   <param name="left_w_addr" value="$(arg left_w_addr)" />
@@ -51,5 +51,5 @@
 <node pkg="joy" name="joy" type="joy_node">
   <param name="dev" value="$(arg joy_dev)"/>
 </node>
-<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node" output="screen"/>
+<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node"/>
 </launch>

@@ -48,16 +48,14 @@ def calc_input(omega_r,omega_l):
     u = np.array([v,yawrate])
     return u
 
-def MotionModel(x,u,dt):
+def MotionModel(x,du):
     """
     Parameters
     ----------
     x : array
         Dolly pose at the last timestamp. Location and orientation (loc_x,loc_y,theta) of the dolly.
-    u : array
-        Dolly velocity. Linear and yaw angular velocity of the dolly.
-    dt : float
-        The difference between the current and last timestamp.
+    du : array
+        Dolly position difference. Linear and yaw angular position difference of the dolly.
 
     Returns
     ----------
@@ -67,11 +65,11 @@ def MotionModel(x,u,dt):
     loc_x = x[0]
     loc_y = x[1]
     theta = x[2]
-    v = u[0]
-    omega = u[1]
-    loc_x = loc_x + np.cos(theta+np.pi/2)*v*dt
-    loc_y = loc_y + np.sin(theta+np.pi/2)*v*dt
-    theta = theta + omega*dt
+    dv = du[0]
+    domega = du[1]
+    loc_x = loc_x + np.cos(theta+np.pi/2)*dv
+    loc_y = loc_y + np.sin(theta+np.pi/2)*dv
+    theta = theta + domega
     theta = PItoPI(theta)
     x=np.array([loc_x,loc_y,theta])
     return x
@@ -111,6 +109,7 @@ class KM_Wheels:
         self.left_w_dev.enable_action()
         self.left_w_dev.enable_continual_imu_measurement()
         #self.left_w_dev.maxTorque(0.15)
+        self.last_left_pos=self.left_w_dev.read_motor_measurement()['position']
         sleep(0.1)
 
         self.imu = Imu()
@@ -126,8 +125,6 @@ class KM_Wheels:
         self.odocount = 0
         self.pub_odo = rospy.Publisher('/odom', Odometry,queue_size=10)
         self.x = np.array([0.0,0.0,0.0])
-        self.current_time = time.time()
-        self.last_time = time.time()
 
         self.tf_broadcaster = tf2_ros.TransformBroadcaster()
 
@@ -192,20 +189,23 @@ class KM_Wheels:
     def pubodo(self):
         try:
             self.odocount+=1
-            self.current_time = time.time()
-            dt=self.current_time-self.last_time
 
             lvalues = self.left_w_dev.read_motor_measurement()
-            left_velocity = lvalues['velocity']
             left_position = lvalues['position']
+            left_velocity = lvalues['velocity']
+            dleft_position = left_position-self.last_left_pos
 
             rvalues = self.right_w_dev.read_motor_measurement()
-            right_velocity=rvalues['velocity']
             right_position=rvalues['position']
+            right_velocity=rvalues['velocity']
+            dright_position = right_position-self.last_right_pos
 
+
+            du=calc_input(-dright_position,dleft_position)#right wheel rotates backwards
             u=calc_input(-right_velocity,left_velocity)#right wheel rotates backwards
+
             old_theta = self.x[2]
-            self.x=MotionModel(self.x,u,dt)
+            self.x=MotionModel(self.x,du,dt)
             self.odo.header.seq=self.odocount
             self.odo.header.stamp=rospy.Time.now()
             self.odo.pose.pose.position.x=self.x[0]
@@ -241,7 +241,8 @@ class KM_Wheels:
             self.right_angle_trans.transform.rotation = Quaternion(*q)
             self.tf_broadcaster.sendTransform(self.right_angle_trans)
 
-            self.last_time = time.time()
+            self.last_left_pos = left_position
+            self.last_right_pos = right_position
         except:
             import traceback
             traceback.print_exc()
