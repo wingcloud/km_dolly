@@ -95,7 +95,7 @@ class KM_Wheels:
         self.right_w_dev.enable_action()
         self.right_w_dev.enable_continual_imu_measurement()
         #self.right_w_dev.maxTorque(0.15)
-
+        sleep(1.0)
         self.last_right_pos=self.right_w_dev.read_motor_measurement()['position']
         '''
         left wheel: front:x,left:-z,top:-y left-handed cordinate
@@ -109,6 +109,7 @@ class KM_Wheels:
         self.left_w_dev.enable_action()
         self.left_w_dev.enable_continual_imu_measurement()
         #self.left_w_dev.maxTorque(0.15)
+        sleep(1.0)
         self.last_left_pos=self.left_w_dev.read_motor_measurement()['position']
         sleep(0.1)
 
@@ -205,7 +206,7 @@ class KM_Wheels:
             u=calc_input(-right_velocity,left_velocity)#right wheel rotates backwards
 
             old_theta = self.x[2]
-            self.x=MotionModel(self.x,du,dt)
+            self.x=MotionModel(self.x,du)
             self.odo.header.seq=self.odocount
             self.odo.header.stamp=rospy.Time.now()
             self.odo.pose.pose.position.x=self.x[0]
@@ -274,6 +275,7 @@ class KM_Wheels:
 
 if __name__=="__main__":
     rospy.init_node("km_wheels", anonymous = True)
+    km_wheels = KM_Wheels()
     for k in range(10):
         try:
             km_wheels = KM_Wheels()
