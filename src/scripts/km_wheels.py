@@ -276,7 +276,7 @@ class KM_Wheels:
 if __name__=="__main__":
     rospy.init_node("km_wheels", anonymous = True)
     km_wheels = KM_Wheels()
-    for k in range(10):
+    for k in range(20):
         try:
             km_wheels = KM_Wheels()
         except:
@@ -289,4 +289,4 @@ if __name__=="__main__":
         km_wheels.pubimu()
         km_wheels.pubodo()
         km_wheels.run_ctrl_cmd()
-        sleep(0.01)
+        sleep(0.1)
