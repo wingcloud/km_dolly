@@ -37,12 +37,12 @@
 
   <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher" />
-<arg name="connect_mode" default="ble" />
-<arg name="right_w_addr" default="c3:29:da:d4:34:d2" />
-<arg name="left_w_addr" default="ee:f4:36:61:81:3f" />
+<arg name="connect_mode" default="usb" />
+<arg name="left_w_addr" default="/dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DM00KBZZ-if00-port0" />
+<arg name="right_w_addr" default="/dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DM00KIEE-if00-port0" />
 <arg name="joy_dev" value="/dev/input/js0" />
 
-<node pkg="km_dolly" name="km_dolly_wheels" type="km_wheels.py" output="screen">
+<node pkg="km_dolly" name="km_dolly_wheels" type="km_wheels.py" >
   <param name="connect_mode" value="$(arg connect_mode)" />
   <param name="right_w_addr" value="$(arg right_w_addr)" />
   <param name="left_w_addr" value="$(arg left_w_addr)" />
@@ -51,5 +51,5 @@
 <node pkg="joy" name="joy" type="joy_node">
   <param name="dev" value="$(arg joy_dev)"/>
 </node>
-<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node"/>
+<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard_node" output="screen" />
 </launch>
