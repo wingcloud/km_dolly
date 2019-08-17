@@ -94,8 +94,8 @@ class KM_Wheels:
         rospy.loginfo("Connected to Right Wheel")
         self.right_w_dev.enable_action()
         self.right_w_dev.enable_continual_imu_measurement()
-        #self.right_w_dev.maxTorque(0.15)
-        sleep(1.0)
+        sleep(0.5)
+
         self.last_right_pos=self.right_w_dev.read_motor_measurement()['position']
         '''
         left wheel: front:x,left:-z,top:-y left-handed cordinate
@@ -108,8 +108,8 @@ class KM_Wheels:
         rospy.loginfo("Connected to Left Wheel")
         self.left_w_dev.enable_action()
         self.left_w_dev.enable_continual_imu_measurement()
-        #self.left_w_dev.maxTorque(0.15)
-        sleep(1.0)
+        sleep(0.5)
+
         self.last_left_pos=self.left_w_dev.read_motor_measurement()['position']
         sleep(0.1)
 
@@ -251,8 +251,12 @@ class KM_Wheels:
     def teleop_callback(self,data):
         linear_speed = LINEAR_RATIO*data.linear.x
         angular_speed = ANGULAR_RATIO*data.angular.z
-        self.right_velocity = linear_speed / D_RIGHT + angular_speed / (TREAD/D_RIGHT/2)
-        self.left_velocity = linear_speed / D_LEFT - angular_speed / (TREAD/D_LEFT/2)
+        new_right_velocity = linear_speed / D_RIGHT + angular_speed / (TREAD/D_RIGHT/2)
+        new_left_velocity = linear_speed / D_LEFT - angular_speed / (TREAD/D_LEFT/2)
+        if self.right_velocity != new_right_velocity or self.left_velocity != new_left_velocity:
+            self.right_velocity = new_right_velocity
+            self.left_velocity = new_left_velocity
+            km_wheels.run_ctrl_cmd()
 
     def run_ctrl_cmd(self):
         if self.left_velocity!=0:
@@ -275,7 +279,6 @@ class KM_Wheels:
 
 if __name__=="__main__":
     rospy.init_node("km_wheels", anonymous = True)
-    km_wheels = KM_Wheels()
     for k in range(10):
         try:
             km_wheels = KM_Wheels()
@@ -288,5 +291,4 @@ if __name__=="__main__":
     while not rospy.is_shutdown():
         km_wheels.pubimu()
         km_wheels.pubodo()
-        km_wheels.run_ctrl_cmd()
-        sleep(0.01)
+        sleep(0.1)
