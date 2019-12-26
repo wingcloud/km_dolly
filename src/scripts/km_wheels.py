@@ -44,7 +44,7 @@ def calc_input(omega_r,omega_l):
     vr=D_RIGHT*omega_r
     vl=D_LEFT*omega_l
     v=(vr+vl)/2.0
-    yawrate=(vr-vl)/(TREAD/2.0)
+    yawrate=(vr-vl)/TREAD
     u = np.array([v,yawrate])
     return u
 
